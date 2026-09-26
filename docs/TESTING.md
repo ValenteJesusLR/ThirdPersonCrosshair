@@ -1,6 +1,6 @@
-# First in-game test
+# Checking it in game
 
-The code was written without a game to run it on. These are the things only the game can confirm, in the order to check them. Set `Debug=1` in the INI (it ships off) and keep the log open: `Documents\My Games\Fallout4\F4SE\ThirdPersonCrosshair.log`.
+Use this after a game update, with a different HUD mod, or when something looks wrong. These are the things only the game can confirm, in the order to check them. Set `Debug=1` in the INI (it ships off) and keep the log open: `Documents\My Games\Fallout4\F4SE\ThirdPersonCrosshair.log`.
 
 ## 1. It loads
 
@@ -21,7 +21,7 @@ debug: camera=8 weaponState=3 gunState=6 scope=false -> crosshair ON
 
 - `camera=8` is third person, and `0` is first person.
 - `gunState` should be **6** (sighted) or **8** (firing while sighted) while you aim.
-- If aiming logs `crosshair off`, note the `gunState` value you see and report it. The check lives in `Wanted()` in `src/Crosshair.cpp`. `ShowWhen=drawn` is a workaround until then.
+- If aiming logs `crosshair off`, note the `gunState` value you see. The check lives in `Wanted()` in `src/Crosshair.cpp`. `ShowWhen=drawn` works around it.
 
 ## 3. Finding the vanilla crosshair
 
@@ -30,21 +30,20 @@ The first time you aim, look for one of these:
 - `crosshair: found the vanilla crosshair at ...`: good.
 - `vanilla crosshair not found in HUDMenu`: the clip has another name in this HUD. Search the HUD's swf in JPEXS for the crosshair clip, then put its path in `CrosshairPath`.
 
-Once found, the log dumps the clip and its children as `debug: vanilla.<child> visible=... alpha=... frame=... label=...`. The dump repeats whenever the aiming state changes.
+Once found, the log dumps the clip and its children once, as `debug: vanilla.<child> visible=... alpha=... frame=... label=...`. The lines are `CrosshairTicks_mc`; if a HUD mod has no clip by that name, the plugin logs a warning and falls back to `Style=custom`.
 
 ## 4. Look
 
 While aiming in third person:
 
-- [ ] Our crosshair shows, centred where you shoot. If it is off-centre, compare `x=`/`y=` with `bounds=` in the dump and use `OffsetX`/`OffsetY`.
-- [ ] The vanilla dot is gone.
-- [ ] Colour matches the HUD. If it stays white while the HUD is tinted, the tint sits on a child of the clip: check which dump lines show a `tint=` other than `(1.00,1.00,1.00 +0,0,0)`, or set `Color=` to an RGB value.
-- [ ] Letting go of aim hides ours and brings the vanilla reticle back.
+- [ ] The four vanilla lines show around the dot, in the HUD colour.
+- [ ] They stay up while firing.
+- [ ] With `CenterDot=0`, the dot is gone and only the lines remain.
+- [ ] Letting go of aim returns to the normal hip-fire crosshair.
 
-## 5. Only the dot, not the whole reticle
+## 5. Style=custom
 
-`HideVanilla` fades the whole vanilla clip. If something you want to keep lives in that clip, such as a hit marker from another mod, find the dump line that is `visible=true` only while aiming. That is the dot. Put its name in `HideChild`.
-
+Experimental: in testing, the custom sprite did not appear on screen. With `Debug=1` the first time it shows, the log has two `debug: our sprite` lines: where it was added, whether it is on stage, and how big the drawing is. Those tell whether the sprite is off the display list, off screen, or empty.
 ## 6. Where it should stay hidden
 
 - [ ] First person, hip fire and iron sights.
