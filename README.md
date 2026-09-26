@@ -31,7 +31,7 @@ The plugin wraps `HUDMenu::AdvanceMovie` (vfunc 4 of the HUDMenu vtable). Every 
 Prerequisites: Visual Studio 2022 with the *Desktop development with C++* workload, [xmake](https://xmake.io) 3.0 or newer, and git.
 
 ```powershell
-git clone --recursive <this repo>
+git clone --recursive https://github.com/ValenteJesusLR/ThirdPersonCrosshair.git
 cd ThirdPersonCrosshair
 xmake build
 ```
